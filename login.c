@@ -191,7 +191,31 @@ User *signup()
     char hashedpassword[MAX + sizeof(char)];
     hash(password, hashedpassword);
 
+    /* Check if users.txt exists*/
+    FILE *file = fopen("users.txt", "r");
+    if (file == NULL)
+    {
+        file = fopen("users.txt", "w");
+        if (file == NULL)
+        {
+            printf("Error creating file.\n");
+            return NULL;
+        }
+    }
+    fclose(file); 
+    /* Close the file if it was just created or already exists*/
+
     root = insert(root, username, hashedpassword);
+
+    /* Add the new user to users.txt*/
+    file = fopen("users.txt", "a");
+    if (file == NULL)
+    {
+        printf("Error opening file.\n");
+        return NULL;
+    }
+    fprintf(file, "%s:%s\n", username, hashedpassword);
+    fclose(file);
 
     user.username = malloc(strlen(username) + 1);
     strcpy(user.username, username);
