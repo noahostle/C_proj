@@ -300,6 +300,8 @@ void changePassword(User *user)
             printf("Error updating file");
             return;
         }
+        /* Rebuild the AVL tree from the updated users.txt file*/
+        rebuildAVLTreeFromFile();
         printf("Password changed successfully.\n");
     }
     else
@@ -309,3 +311,36 @@ void changePassword(User *user)
     }
 }
 
+void rebuildAVLTreeFromFile()
+{
+    freeAVLTree(root);
+    root = NULL;
+
+    FILE *file = fopen("users.txt", "r");
+    if (!file)
+    {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    char username[101];
+    char hashedpassword[MAX + sizeof(char)];
+
+   
+    while (fscanf(file, "%100[^:]:%100s\n", username, hashedpassword) == 2)
+    {
+        root = insert(root, username, hashedpassword);
+    }
+
+    fclose(file);
+}
+
+void freeAVLTree(AVLNode *node)
+{
+    if (node == NULL)
+        return;
+
+    freeAVLTree(node->left);
+    freeAVLTree(node->right);
+    free(node);
+}

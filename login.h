@@ -9,10 +9,14 @@ typedef struct
     char *hashedpassword;
 } User;
 
+typedef struct AVLNode AVLNode;
+
 /* Function declarations */
 void start();
 User *login();
 User *signup();
 void changePassword(User *user);
+void rebuildAVLTreeFromFile();
+void freeAVLTree(AVLNode *node);
 
 #endif
